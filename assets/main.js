@@ -92,8 +92,9 @@ function handleOAuthRedirect () {
 function renderLogin ({login, avatarUrl}) {
   if (login) {
     $accountContainer.html(`
-      <strong><img src="${avatarUrl}&size=50"> ${login}</strong>
-      (<a href="#logout" data-action="logout">sign out</a>)`)
+      <img src="${avatarUrl}&size=50" alt="">
+      <strong>${login}</strong>
+      <a href="#logout" data-action="logout">(sign out)</a>`)
     return
   }
 

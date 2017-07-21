@@ -1,10 +1,7 @@
 ---
 layout: default
+title: News
 ---
-
-### News
-
-[submit](/submit.html)
 
 {% for funk in site.data.news %}
 {% assign post = funk[1] %}

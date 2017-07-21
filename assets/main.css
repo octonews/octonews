@@ -1,8 +1,73 @@
 * {
-  font-family: helvetica, arial, sans-serif;
+  font-family: "Helvetica Neue", Helvetica, sans-serif;
 }
 
 body {
   font-size: 1.4em;
+  line-height: 1.5;
   padding: 1em;
+}
+
+input {
+  display: inline-block;
+  line-height: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  padding: 0.375em 0.75em;
+  border-radius: 0.25em;
+  border: 1px solid black;
+  border-color: rgba(0, 0, 0, 0.25);
+  width: 20em;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+button {
+  display: inline-block;
+  background: rgb(144, 194, 70); /* @lime */
+  color: white;
+  padding: 0.375em 1.5em;
+  border-radius: 0.25em;
+  border: 1px solid;
+  text-decoration: none;
+  cursor: pointer;
+  font-size: inherit;
+  line-height: inherit;
+  text-align: center;
+  box-sizing: border-box;
+}
+button:hover,
+button:active,
+button:focus {
+  background: rgb(124, 174, 50); /* @dark-lime */
+  text-decoration: none;
+  color: white;
+}
+
+header ul {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  list-style: none;
+  padding-left: 0;
+}
+header li {
+  display: flex;
+  align-items: center;
+  margin-right: 1em;
+}
+header li#account {
+  margin-right: 0;
+  flex-grow: 1;
+  display: flex;
+  justify-content: flex-end;
+}
+header li#account * {
+  margin-left: 1em;
+}
+
+header li.active a {
+  color: inherit;
+  text-decoration: none;
+  font-weight: bold;
 }

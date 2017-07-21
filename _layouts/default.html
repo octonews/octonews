@@ -1,16 +1,23 @@
 <!DOCTYPE html>
-<html lang="{{ page.lang | default: site.lang | default: "en" }}">
+<html lang="en" dir="ltr">
 
   {% include head.html %}
 
-  <body>
-    <div id="account">
-      <!-- populated in main.js -->
-    </div>
+  <body data-page="{{ page.name }}">
+
     <header>
-      <h1>{{ page.title }}</h1>
+      <ul>
+        <li {% if page.url == '/' %}class="active"{% endif %}><a href="/">News</a></li>
+        <li {% if page.url == '/submit/' %}class="active"{% endif %}><a href="/submit">Submit</a></li>
+        <li id="account">
+          <!-- populated in main.js -->
+        </li>
+      </ul>
     </header>
+ 
     <main class="page-content" aria-label="Content">
+      <h1>{{ page.title }}</h1>
+
       <div class="wrapper">
         {{ content }}
       </div>
