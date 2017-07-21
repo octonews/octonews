@@ -71,3 +71,14 @@ header li.active a {
   text-decoration: none;
   font-weight: bold;
 }
+
+.submit-form,
+.signed-out-message {
+  display: none;
+}
+
+[data-account-status="signed-in"] .submit-form,
+[data-account-status="signed-out"] .signed-out-message {
+  display: block;
+}
+

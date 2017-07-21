@@ -91,6 +91,7 @@ function handleOAuthRedirect () {
 
 function renderLogin ({login, avatarUrl}) {
   if (login) {
+    document.body.dataset.accountStatus = "signed-in";
     $accountContainer.html(`
       <img src="${avatarUrl}&size=50" alt="">
       <strong>${login}</strong>
@@ -98,5 +99,7 @@ function renderLogin ({login, avatarUrl}) {
     return
   }
 
+  document.body.dataset.accountStatus = "signed-out"
   $accountContainer.html('<a href="#login" data-action="login">sign in</a>')
 }
+
