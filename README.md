@@ -1,12 +1,12 @@
-# news.hood.ie
+# gossip
 
 > A collaborative link sharing platform
 
 ## What
 
-We want to create a link-sharing platform which allows Hoodie contributors to collaboratively share links on topics that interest us. It will be a website and will have a web UI to submit links as well as review submissions, while at the same time integrate with GitHub to work well with existing workflows.
+We want to create a link-sharing platform which allows communities to collaboratively share links on topics that interest us. It will be a website and will have a web UI to submit links as well as review submissions, while at the same time integrate with GitHub to work well with existing workflows.
 
-While we create it for the Hoodie community, making it flexible enough so that it can be used by other communities would be a bonus down the road.
+While my main motivation is to to create it for the Hoodie community, making it flexible enough so that it can be used by other communities is a priority form the start.
 
 ## Why
 
@@ -17,9 +17,9 @@ Instead of searching for a new curator, we are looking for ways to make it simpl
 
 ## How
 
-The priority of the implementation of news.hood.ie is to be as accessible to contributors as possible. It is also an experiment of using GitHub as a database of sort, in order to keep track of peoples contributions as well as integration of existing tools we use today.
+The priority of the implementation of `gossip` is to be as accessible to contributors as possible. It is also an experiment of using GitHub as a database of sort, in order to keep track of peoples contributions as well as integration of existing tools we use today.
 
-`news.hood.ie` will be a GitHub repository containing a [jekyll](https://jekyllrb.com) page. For the link submissions, we will use separate `.yml` files stored in the [`/_data/news`](https://jekyllrb.com/docs/datafiles/#the-data-folder) folder, and the files will be prefixed with the current date.
+`gossip` will be a GitHub repository containing a [jekyll](https://jekyllrb.com) page. For the link submissions, we will use separate `.yml` files stored in the [`/_data/news`](https://jekyllrb.com/docs/datafiles/#the-data-folder) folder, and the files will be prefixed with the current date.
 
 An example file could be `/_data/news/2016-10-14-obamas-facebook-messenger-bot-is-open-source.yml` with the following content
 
@@ -45,9 +45,9 @@ The links can be rendered with a loop like
 {% endfor %}
 ```
 
-Instead of using a text editor or the github.com UI to submit a new link, `news.hood.ie` will include a form which will utilise GitHub’s API to create a fork, the .yml file and the pull request. People submitting news will need to login with their GitHub account but don’t need any experience in `.git`, `.github` or `.yml` files at all.
+Instead of using a text editor or the github.com UI to submit a new link, `gossip` will include a form which will utilise GitHub’s API to create a fork, the .yml file and the pull request. People submitting news will need to login with their GitHub account but don’t need any experience in `.git`, `.github` or `.yml` files at all.
 
-Once a PR got submitted, the `@hoodiehq/maintainers` team can review and merge the PR, after which the page will be rebuild automatically and the link will appear on https://news.hood.ie.
+Once a PR got submitted, the maintainers team can review and merge the PR, after which the page will be rebuild automatically and the link will appear on the GitHub page.
 
 Something we do _not_ plan to add is comments. People can have discussions on GitHub, but we will not show any discussions on news.github.com
 
