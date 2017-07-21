@@ -53,6 +53,8 @@ function handleOAuthRedirect () {
     return
   }
 
+  renderAccountLoading();
+
   Scoop.fetchAccount({
     code: code,
     state: responseState
@@ -66,6 +68,13 @@ function handleOAuthRedirect () {
   .catch((error) => {
     console.log(error.stack)
   })
+}
+
+function renderAccountLoading() {
+  $accountContainer.html(`
+    Loading…
+    `)
+  return
 }
 
 function renderSignedIn ({login, avatarUrl}) {
