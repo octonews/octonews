@@ -21,16 +21,21 @@ if (Scoop.isSignedIn()) {
 
 Scoop.set(key, value)
 Scoop.get(key)
+Scoop.unset(key)
 
 Scoop.signIn() // redirects to GitHub to sign in
 Scoop.signOut()
 
 // fetch current user’s account information
 Scoop.fetchAccount()
+
 // fetch current user’s account information using single-use code & state
 // query parameter from the GitHub OAuth redirect
 Scoop.fetchAccount({code, state})
   .then(({token, scope, login, avatarUrl}) => {
     //
   })
+
+// submit a link
+Scoop.submitLink({url, tile})
 ```
