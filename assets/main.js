@@ -26,7 +26,7 @@ function handleUrlSubmit (event) {
 
   .then((response) => {
     window.alert('link submitted')
-    $submitForm.reset()
+    $submitForm[0].reset()
   })
 
   .catch((error) => {
