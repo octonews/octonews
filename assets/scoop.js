@@ -6,7 +6,9 @@ window.Scoop = (function () {
   const GITHUB_SCOPES = [
     'public_repo'
   ]
-  const CLIENT_ID = 'fea7761d62c6ab170278'
+
+  const CLIENT_ID = window.location.hostname === 'localhost' ? '12556b17f8b4fc3f3974' : 'fea7761d62c6ab170278'
+  const ENV_PREFIX = window.location.hostname === 'localhost' ? '/local' : ''
 
   function get (key) {
     return JSON.parse(localStorage.getItem(key))
@@ -47,7 +49,7 @@ window.Scoop = (function () {
 
     unset('oauthState')
 
-    return $.getJSON(`${LOGIN_SERVER_BASEURL}?code=${code}&state=${state}`)
+    return $.getJSON(`${LOGIN_SERVER_BASEURL}${ENV_PREFIX}/${code}?state=${state}`)
 
     .then((response) => {
       // {

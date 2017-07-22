@@ -53,7 +53,7 @@ function handleOAuthRedirect () {
     return
   }
 
-  renderAccountLoading();
+  renderAccountLoading()
 
   Scoop.fetchAccount({
     code: code,
@@ -70,10 +70,8 @@ function handleOAuthRedirect () {
   })
 }
 
-function renderAccountLoading() {
-  $accountContainer.html(`
-    Loading…
-    `)
+function renderAccountLoading () {
+  $accountContainer.html(`Loading…`)
   return
 }
 
