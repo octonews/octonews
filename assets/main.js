@@ -2,7 +2,7 @@
 
 const $submitForm = $('#submit-url')
 const $accountContainer = $('#account')
-const $body = $('body');
+const $body = $('body')
 
 $submitForm.on('submit', handleUrlSubmit)
 $body.on('click', '[data-action="login"]', handleLoginClick)
@@ -18,6 +18,20 @@ handleOAuthRedirect()
 
 function handleUrlSubmit (event) {
   event.preventDefault()
+
+  const url = $submitForm.find('[name=url]').val()
+  const title = $submitForm.find('[name=title]').val()
+
+  Scoop.submitLink({url, title})
+
+  .then((response) => {
+    window.alert('link submitted')
+    $submitForm.reset()
+  })
+
+  .catch((error) => {
+    window.alert(error.toString())
+  })
 }
 
 function handleLoginClick (event) {

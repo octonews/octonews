@@ -43,6 +43,14 @@ window.Scoop = (function () {
   }
 
   function fetchAccount ({code, state}) {
+    if (state) {
+      return fetchAccountUsingCodeAndState({code, state})
+    }
+
+    return fetchAccountUsingToken
+  }
+
+  function fetchAccountUsingCodeAndState ({code, state}) {
     if (state !== get('oauthState')) {
       return Promise.reject(new Error('?state does not match value stored previously, aborting for XSS protection.'))
     }
@@ -63,13 +71,23 @@ window.Scoop = (function () {
         scope: response.scope
       })
 
-      return $.ajax({
-        dataType: 'json',
-        url: `${GITHUB_API_BASEURL}/user`,
-        headers: {
-          Authorization: `token ${response.access_token}`
-        }
-      })
+      return fetchAccountUsingToken()
+    })
+  }
+
+  function fetchAccountUsingToken () {
+    const account = get('account')
+
+    if (!account) {
+      return Promise.reject(new Error('Not signed in'))
+    }
+
+    return $.ajax({
+      dataType: 'json',
+      url: `${GITHUB_API_BASEURL}/user`,
+      headers: {
+        Authorization: `token ${account.token}`
+      }
     })
 
     .then((response) => {
@@ -84,6 +102,10 @@ window.Scoop = (function () {
     })
   }
 
+  function submitLink ({url, title}) {
+    return Promise.reject(new Error('Not yet implemented'))
+  }
+
   return {
     get,
     update,
@@ -91,6 +113,7 @@ window.Scoop = (function () {
     isSignedIn,
     signIn,
     signOut,
-    fetchAccount
+    fetchAccount,
+    submitLink
   }
 })()
