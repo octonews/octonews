@@ -2,9 +2,11 @@
 
 const $submitForm = $('#submit-url')
 const $accountContainer = $('#account')
+const $body = $('body');
 
 $submitForm.on('submit', handleUrlSubmit)
-$accountContainer.on('click', 'a', handleAccountClick)
+$body.on('click', '[data-action="login"]', handleLoginClick)
+$body.on('click', '[data-action="logout"]', handleLogoutClick)
 
 if (Scoop.isSignedIn()) {
   renderSignedIn(Scoop.get('account'))
@@ -18,14 +20,13 @@ function handleUrlSubmit (event) {
   event.preventDefault()
 }
 
-function handleAccountClick (event) {
+function handleLoginClick (event) {
   event.preventDefault()
+  return Scoop.signIn()
+}
 
-  const action = this.dataset.action
-
-  if (action === 'login') {
-    return Scoop.signIn()
-  }
+function handleLogoutClick (event) {
+  event.preventDefault()
 
   Scoop.signOut()
 
