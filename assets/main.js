@@ -1,7 +1,8 @@
 /* global $, Scoop */
 
 const $submitForm = $('#submit-url')
-const $accountContainer = $('#account')
+const $accountTab = $('#account')
+const $pendingTabNum = $('#pending span')
 const $body = $('body')
 
 $submitForm.on('submit', handleUrlSubmit)
@@ -86,7 +87,7 @@ function handleOAuthRedirect () {
 }
 
 function renderAccountLoading () {
-  $accountContainer.html(`Loading…`)
+  $accountTab.html(`Loading…`)
   return
 }
 
@@ -95,15 +96,24 @@ function renderSignedIn ({login, avatarUrl, hasWriteAccess}) {
   if (hasWriteAccess) {
     document.body.dataset.hasWriteAccess = 'yes'
   }
-  $accountContainer.html(`
+  $accountTab.html(`
     <img src="${avatarUrl}&size=50" alt="">
     <strong>${login}</strong>
     <a href="#logout" data-action="logout">(sign out)</a>`)
-  return
+
+  Scoop.getPendingLinks()
+
+  .then((pending) => {
+    $pendingTabNum.text(pending.length)
+  })
+
+  .catch((error) => {
+    console.log(error)
+  })
 }
 
 function renderSignedOut () {
   document.body.dataset.accountStatus = 'signed-out'
   delete document.body.dataset.hasWriteAccess
-  $accountContainer.html('<a href="#login" data-action="login">sign in</a>')
+  $accountTab.html('<a href="#login" data-action="login">sign in</a>')
 }

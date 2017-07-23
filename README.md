@@ -38,4 +38,7 @@ Scoop.fetchAccount({code, state})
 
 // submit a link
 Scoop.submitLink({url, tile})
+
+// load pending link submissions
+Scoop.getPendingLinks()
 ```

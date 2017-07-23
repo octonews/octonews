@@ -138,6 +138,14 @@ Submitted with [🥄 Scoop](https://github.com/gr2m/scoop)!`,
     })
   }
 
+  function getPendingLinks () {
+    return request(`${GITHUB_API_BASEURL}/repos/${GITHUB_REPO}/pulls?state=open`)
+
+    .then((result) => {
+      return result.filter(isLinkSubmission)
+    })
+  }
+
   // private methods - only used internally
   function request (options) {
     const account = get('account')
@@ -245,6 +253,11 @@ submittedBy: ${login}
     })
   }
 
+  function isLinkSubmission (pullRequest) {
+    const branchName = pullRequest.head.ref.split(/:/).pop()
+    return /^submit\//.test(branchName)
+  }
+
   // return API
   return {
     get,
@@ -254,6 +267,7 @@ submittedBy: ${login}
     signIn,
     signOut,
     fetchAccount,
-    submitLink
+    submitLink,
+    getPendingLinks
   }
 })()
