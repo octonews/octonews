@@ -102,6 +102,8 @@ window.Scoop = (function () {
     const slug = title.toLowerCase().replace(/\W+/g, '-')
     const fileName = [day, slug].join('-')
     const branchName = `submit/${day}/${slug}`
+    let forkName = ''
+    let lastCommitSha
 
     // 1. Get the sha for the latest commit on master
     //    https://developer.github.com/v3/git/refs/#get-a-reference
@@ -110,7 +112,7 @@ window.Scoop = (function () {
     // 2. Create a branch
     //    https://developer.github.com/v3/git/refs/#create-a-reference
     .then((result) => {
-      const lastCommitSha = result.object.sha
+      lastCommitSha = result.object.sha
 
       return request({
         type: 'POST',
@@ -122,14 +124,46 @@ window.Scoop = (function () {
       })
     })
 
-    // 3. Create the file on that branch
+    // 3. If user has no write access, create a fork, then create branch on fork
+    //    https://developer.github.com/v3/git/refs/#create-a-reference
+    //    Note that GitHub response with "404 Not Found" if user has no access
+    .catch((response) => {
+      // {
+      //   "message": "Not Found",
+      //   "documentation_url": "https://developer.github.com/v3/git/refs/#create-a-reference"
+      // }
+      if (response.status === 404) {
+        return request({
+          type: 'POST',
+          url: `${GITHUB_API_BASEURL}/repos/${GITHUB_REPO}/forks`,
+          data: {}
+        })
+
+        .then((result) => {
+          forkName = result.full_name
+
+          return request({
+            type: 'POST',
+            url: `${GITHUB_API_BASEURL}/repos/${forkName}/git/refs`,
+            data: {
+              ref: `refs/heads/${branchName}`,
+              sha: lastCommitSha
+            }
+          })
+        })
+      }
+
+      return Promise.reject(response)
+    })
+
+    // 4. Create the file on that branch
     //    https://developer.github.com/v3/repos/contents/#create-a-file
-    .then((result) => {
+    .then(() => {
       const path = `_data/news/${fileName}.yml`
 
       return request({
         type: 'PUT',
-        url: `${GITHUB_API_BASEURL}/repos/${GITHUB_REPO}/contents/${path}`,
+        url: `${GITHUB_API_BASEURL}/repos/${forkName || GITHUB_REPO}/contents/${path}`,
         data: {
           message: `📰 ${title}
 
@@ -146,15 +180,17 @@ Submitted with [🥄 Scoop](https://github.com/gr2m/scoop)!
       })
     })
 
-    // 4. Create a pull request for the branch
+    // 5. Create a pull request for the branch
     //    https://developer.github.com/v3/pulls/#create-a-pull-request
     .then((result) => {
+      const account = get('account')
+
       return request({
         type: 'POST',
         url: `${GITHUB_API_BASEURL}/repos/${GITHUB_REPO}/pulls`,
         data: {
           title: `📰 ${title}`,
-          head: `${branchName}`,
+          head: forkName ? `${account.login}:${branchName}` : `${branchName}`,
           base: 'master',
           body: `Title: ${title}
 Url: ${url}
