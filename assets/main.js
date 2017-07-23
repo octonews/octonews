@@ -75,9 +75,9 @@ function handleOAuthRedirect () {
     state: responseState
   })
 
-  .then(({login, avatarUrl}) => {
-    console.log(`${login} signed in`)
-    renderSignedIn({login, avatarUrl})
+  .then((account) => {
+    console.log(`${account.login} signed in`)
+    renderSignedIn(account)
   })
 
   .catch((error) => {
@@ -90,8 +90,11 @@ function renderAccountLoading () {
   return
 }
 
-function renderSignedIn ({login, avatarUrl}) {
+function renderSignedIn ({login, avatarUrl, hasWriteAccess}) {
   document.body.dataset.accountStatus = 'signed-in'
+  if (hasWriteAccess) {
+    document.body.dataset.hasWriteAccess = 'yes'
+  }
   $accountContainer.html(`
     <img src="${avatarUrl}&size=50" alt="">
     <strong>${login}</strong>
@@ -101,5 +104,6 @@ function renderSignedIn ({login, avatarUrl}) {
 
 function renderSignedOut () {
   document.body.dataset.accountStatus = 'signed-out'
+  delete document.body.dataset.hasWriteAccess
   $accountContainer.html('<a href="#login" data-action="login">sign in</a>')
 }

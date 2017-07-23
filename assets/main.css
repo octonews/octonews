@@ -72,6 +72,20 @@ header li.active a {
   font-weight: bold;
 }
 
+header li#pending span::before{
+  content: '('
+}
+
+header li#pending {
+  display: none;
+}
+[data-has-write-access] header li#pending {
+  display: flex;
+}
+header li#pending span::after{
+  content: ')'
+}
+
 .submit-form,
 .signed-out-message {
   display: none;
