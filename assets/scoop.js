@@ -15,6 +15,10 @@ window.Scoop = (function () {
     return JSON.parse(localStorage.getItem(key))
   }
 
+  function set (key, value) {
+    localStorage.setItem(key, JSON.stringify(value))
+  }
+
   function update (key, changedProperties) {
     const item = get(key) || {}
     Object.assign(item, changedProperties)
@@ -287,6 +291,7 @@ submittedBy: ${login}
   // return API
   return {
     get,
+    set,
     update,
     unset,
     isSignedIn,

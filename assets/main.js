@@ -13,11 +13,16 @@ $pendingLinks.on('click', '[data-action="accept"]', handleLinkAcceptClick)
 
 if (Scoop.isSignedIn()) {
   renderSignedIn(Scoop.get('account'))
+  renderPendingLinks()
 } else {
   renderSignedOut()
 }
 
 handleOAuthRedirect()
+
+if ($pendingLinks.length) {
+  updatePendingLinks()
+}
 
 function handleUrlSubmit (event) {
   event.preventDefault()
@@ -105,6 +110,7 @@ function handleOAuthRedirect () {
   .then((account) => {
     console.log(`${account.login} signed in`)
     renderSignedIn(account)
+    return updatePendingLinks()
   })
 
   .catch((error) => {
@@ -126,8 +132,6 @@ function renderSignedIn ({login, avatarUrl, hasWriteAccess}) {
     <img src="${avatarUrl}&size=50" alt="">
     <strong>${login}</strong>
     <a href="#logout" data-action="logout">(sign out)</a>`)
-
-  updatePendingLinks()
 }
 
 function renderSignedOut () {
@@ -136,28 +140,37 @@ function renderSignedOut () {
   $accountTab.html('<a href="#login" data-action="login">sign in</a>')
 }
 
+function renderPendingLinks () {
+  const pending = Scoop.get('pendingLinks')
+
+  if (!pending) return
+
+  $pendingTabNum.text(pending.length)
+
+  const listItemsHtml = pending.map((link) => {
+    return `
+      <li data-nr="${link.pullRequest.number}">
+        <a href=${link.url}>${link.title}</a><br>
+        by ${link.submittedBy} on ${link.submittedAt}<br>
+        <br>
+        <button data-action="accept">accept</button> <a href="${link.pullRequest.url}">comment on GitHub</a>
+      </li>`
+  }).join('')
+
+  if (listItemsHtml) {
+    $pendingLinks.html(`<ul>${listItemsHtml}</ul>`)
+    return
+  }
+
+  $pendingLinks.html('<p>No pending links 👌</p>')
+}
+
 function updatePendingLinks () {
   return Scoop.getPendingLinks()
 
   .then((pending) => {
-    $pendingTabNum.text(pending.length)
-
-    const listItemsHtml = pending.map((link) => {
-      return `
-        <li data-nr="${link.pullRequest.number}">
-          <a href=${link.url}>${link.title}</a><br>
-          by ${link.submittedBy} on ${link.submittedAt}<br>
-          <br>
-          <button data-action="accept">accept</button> <a href="${link.pullRequest.url}">comment on GitHub</a>
-        </li>`
-    }).join('')
-
-    if (listItemsHtml) {
-      $pendingLinks.html(`<ul>${listItemsHtml}</ul>`)
-      return
-    }
-
-    $pendingLinks.html('<p>No pending links 👌</p>')
+    Scoop.set('pendingLinks', pending)
+    renderPendingLinks()
   })
 
   .catch((error) => {
