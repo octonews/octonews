@@ -146,6 +146,13 @@ Submitted with [🥄 Scoop](https://github.com/gr2m/scoop)!`,
     })
   }
 
+  function acceptPendingLink (nr) {
+    return request({
+      type: 'PUT',
+      url: `${GITHUB_API_BASEURL}/repos/${GITHUB_REPO}/pulls/${nr}/merge`
+    })
+  }
+
   // private methods - only used internally
   function request (options) {
     const account = get('account')
@@ -266,7 +273,11 @@ submittedBy: ${login}
       submittedAt: pullRequest.created_at,
       submittedBy: pullRequest.user.login,
       url: pullRequest.body.match(/Title: ([^\n]+)/)[1],
-      title: pullRequest.body.match(/Title: ([^\n]+)/)[1]
+      title: pullRequest.body.match(/Title: ([^\n]+)/)[1],
+      pullRequest: {
+        number: pullRequest.number,
+        url: pullRequest.html_url
+      }
     }
 
     return link
@@ -282,6 +293,7 @@ submittedBy: ${login}
     signOut,
     fetchAccount,
     submitLink,
-    getPendingLinks
+    getPendingLinks,
+    acceptPendingLink
   }
 })()

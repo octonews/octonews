@@ -9,6 +9,7 @@ const $pendingLinks = $('#pending-links')
 $submitForm.on('submit', handleUrlSubmit)
 $body.on('click', '[data-action="login"]', handleLoginClick)
 $body.on('click', '[data-action="logout"]', handleLogoutClick)
+$pendingLinks.on('click', '[data-action="accept"]', handleLinkAcceptClick)
 
 if (Scoop.isSignedIn()) {
   renderSignedIn(Scoop.get('account'))
@@ -49,6 +50,27 @@ function handleLogoutClick (event) {
   .then(({login}) => {
     console.log(`${login} signed out`)
     renderSignedOut()
+  })
+}
+
+function handleLinkAcceptClick (event) {
+  event.preventDefault()
+
+  const pullRequestNumber = $(event.target).closest('[data-nr]').data('nr')
+
+  Scoop.acceptPendingLink(pullRequestNumber)
+
+  .then(() => {
+    return updatePendingLinks()
+  })
+
+  .then(() => {
+    window.alert('Link accepted 🤗')
+  })
+
+  .catch((error) => {
+    window.alert('Something went wrong 😭')
+    console.log(error)
   })
 }
 
@@ -102,30 +124,40 @@ function renderSignedIn ({login, avatarUrl, hasWriteAccess}) {
     <strong>${login}</strong>
     <a href="#logout" data-action="logout">(sign out)</a>`)
 
-  Scoop.getPendingLinks()
-
-  .then((pending) => {
-    $pendingTabNum.text(pending.length)
-
-    if ($pendingLinks.length === 0) return
-
-    const listItemsHtml = pending.map((link) => {
-      return `<li>
-        <a href=${link.url}>${link.title}</a><br>
-        by ${link.submittedBy} on ${link.submittedAt}
-      </li>`
-    }).join('\n')
-
-    $pendingLinks.html(`<ul>${listItemsHtml}</ul>`)
-  })
-
-  .catch((error) => {
-    console.log(error)
-  })
+  updatePendingLinks()
 }
 
 function renderSignedOut () {
   document.body.dataset.accountStatus = 'signed-out'
   delete document.body.dataset.hasWriteAccess
   $accountTab.html('<a href="#login" data-action="login">sign in</a>')
+}
+
+function updatePendingLinks () {
+  return Scoop.getPendingLinks()
+
+  .then((pending) => {
+    $pendingTabNum.text(pending.length)
+
+    const listItemsHtml = pending.map((link) => {
+      return `
+        <li data-nr="${link.pullRequest.number}">
+          <a href=${link.url}>${link.title}</a><br>
+          by ${link.submittedBy} on ${link.submittedAt}<br>
+          <br>
+          <button data-action="accept">accept</button> <a href="${link.pullRequest.url}">comment on GitHub</a>
+        </li>`
+    }).join('')
+
+    if (listItemsHtml) {
+      $pendingLinks.html(`<ul>${listItemsHtml}</ul>`)
+      return
+    }
+
+    $pendingLinks.html('<p>No pending links 👌</p>')
+  })
+
+  .catch((error) => {
+    console.log(error)
+  })
 }
