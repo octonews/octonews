@@ -4,6 +4,7 @@ const $submitForm = $('#submit-url')
 const $accountTab = $('#account')
 const $pendingTabNum = $('#pending span')
 const $body = $('body')
+const $pendingLinks = $('#pending-links')
 
 $submitForm.on('submit', handleUrlSubmit)
 $body.on('click', '[data-action="login"]', handleLoginClick)
@@ -105,6 +106,17 @@ function renderSignedIn ({login, avatarUrl, hasWriteAccess}) {
 
   .then((pending) => {
     $pendingTabNum.text(pending.length)
+
+    if ($pendingLinks.length === 0) return
+
+    const listItemsHtml = pending.map((link) => {
+      return `<li>
+        <a href=${link.url}>${link.title}</a><br>
+        by ${link.submittedBy} on ${link.submittedAt}
+      </li>`
+    }).join('\n')
+
+    $pendingLinks.html(`<ul>${listItemsHtml}</ul>`)
   })
 
   .catch((error) => {

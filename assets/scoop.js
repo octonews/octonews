@@ -141,8 +141,8 @@ Submitted with [🥄 Scoop](https://github.com/gr2m/scoop)!`,
   function getPendingLinks () {
     return request(`${GITHUB_API_BASEURL}/repos/${GITHUB_REPO}/pulls?state=open`)
 
-    .then((result) => {
-      return result.filter(isLinkSubmission)
+    .then((pullRequests) => {
+      return pullRequests.filter(isLinkSubmission).map(toLink)
     })
   }
 
@@ -256,6 +256,20 @@ submittedBy: ${login}
   function isLinkSubmission (pullRequest) {
     const branchName = pullRequest.head.ref.split(/:/).pop()
     return /^submit\//.test(branchName)
+  }
+
+  function toLink (pullRequest) {
+    // This is a very simple implementation, easy to break and easy to trick
+    // us into merging something we don’t want, as we only look at the pull
+    // request description, but not the actual file. That’s TBD :)
+    const link = {
+      submittedAt: pullRequest.created_at,
+      submittedBy: pullRequest.user.login,
+      url: pullRequest.body.match(/Title: ([^\n]+)/)[1],
+      title: pullRequest.body.match(/Title: ([^\n]+)/)[1]
+    }
+
+    return link
   }
 
   // return API

@@ -87,11 +87,17 @@ header li#pending span::after{
 }
 
 .submit-form,
+#pending-links,
+.write-access-required-message,
 .signed-out-message {
   display: none;
 }
 
 [data-account-status="signed-in"] .submit-form,
 [data-account-status="signed-out"] .signed-out-message {
+  display: block;
+}
+
+[data-has-write-access] #pending-links {
   display: block;
 }
