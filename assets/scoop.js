@@ -52,6 +52,7 @@ window.Scoop = (function () {
   }
 
   function submitLink ({url, title}) {
+    const account = get('account')
     const day = new Date().toISOString().substr(0, 10)
     const slug = title.toLowerCase().replace(/\W+/g, '-')
     const fileName = [day, slug].join('-')
@@ -63,51 +64,34 @@ window.Scoop = (function () {
     //    https://developer.github.com/v3/git/refs/#get-a-reference
     return request(`${GITHUB_API_BASEURL}/repos/${GITHUB_REPO}/git/refs/heads/master`)
 
-    // 2. Create a branch
+    // 2. If user has no write access, create a fork
     //    https://developer.github.com/v3/git/refs/#create-a-reference
     .then((result) => {
       lastCommitSha = result.object.sha
 
-      return request({
-        type: 'POST',
-        url: `${GITHUB_API_BASEURL}/repos/${GITHUB_REPO}/git/refs`,
-        data: {
-          ref: `refs/heads/${branchName}`,
-          sha: lastCommitSha
-        }
-      })
-    })
-
-    // 3. If user has no write access, create a fork, then create branch on fork
-    //    https://developer.github.com/v3/git/refs/#create-a-reference
-    //    Note that GitHub response with "404 Not Found" if user has no access
-    .catch((response) => {
-      // {
-      //   "message": "Not Found",
-      //   "documentation_url": "https://developer.github.com/v3/git/refs/#create-a-reference"
-      // }
-      if (response.status === 404) {
+      if (!account.hasWriteAccess) {
         return request({
           type: 'POST',
           url: `${GITHUB_API_BASEURL}/repos/${GITHUB_REPO}/forks`,
           data: {}
         })
-
         .then((result) => {
           forkName = result.full_name
-
-          return request({
-            type: 'POST',
-            url: `${GITHUB_API_BASEURL}/repos/${forkName}/git/refs`,
-            data: {
-              ref: `refs/heads/${branchName}`,
-              sha: lastCommitSha
-            }
-          })
         })
       }
+    })
 
-      return Promise.reject(response)
+    // 3. Create a branch
+    //    https://developer.github.com/v3/git/refs/#create-a-reference
+    .then((result) => {
+      return request({
+        type: 'POST',
+        url: `${GITHUB_API_BASEURL}/repos/${forkName || GITHUB_REPO}/git/refs`,
+        data: {
+          ref: `refs/heads/${branchName}`,
+          sha: lastCommitSha
+        }
+      })
     })
 
     // 4. Create the file on that branch
@@ -137,8 +121,6 @@ Submitted with [🥄 Scoop](https://github.com/gr2m/scoop)!
     // 5. Create a pull request for the branch
     //    https://developer.github.com/v3/pulls/#create-a-pull-request
     .then((result) => {
-      const account = get('account')
-
       return request({
         type: 'POST',
         url: `${GITHUB_API_BASEURL}/repos/${GITHUB_REPO}/pulls`,
@@ -239,7 +221,27 @@ submittedBy: ${login}
         avatarUrl: response.avatar_url
       })
 
-      return get('account')
+      // check if user has write access to repository. There is no dedicated
+      // API for that, but the Collaborators API returns with an error for
+      // non-collaborators, so we can use that Instead
+      // https://developer.github.com/v3/repos/collaborators/#list-collaborators
+      return request(`${GITHUB_API_BASEURL}/repos/${GITHUB_REPO}/collaborators`)
+    })
+
+    .then(() => {
+      return update('account', {
+        hasWriteAccess: true
+      })
+    })
+
+    .catch((response) => {
+      if (response.responseJSON.message === 'Must have push access to view repository collaborators.') {
+        return update('account', {
+          hasWriteAccess: false
+        })
+      }
+
+      return Promise.reject(response)
     })
   }
 
