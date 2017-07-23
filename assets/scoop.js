@@ -48,53 +48,7 @@ window.Scoop = (function () {
       return fetchAccountUsingCodeAndState({code, state})
     }
 
-    return fetchAccountUsingToken
-  }
-
-  function fetchAccountUsingCodeAndState ({code, state}) {
-    if (state !== get('oauthState')) {
-      return Promise.reject(new Error('?state does not match value stored previously, aborting for XSS protection.'))
-    }
-
-    unset('oauthState')
-
-    return request(`${LOGIN_SERVER_BASEURL}${ENV_PREFIX}/${code}?state=${state}`)
-
-    .then((response) => {
-      // {
-      //   access_token: 'ce9f8afc1718d57d24caf84a511e375e21e41eb6',
-      //   token_type: 'bearer',
-      //   scope: 'public_repo'
-      // }
-
-      update('account', {
-        token: response.access_token,
-        scope: response.scope
-      })
-
-      return fetchAccountUsingToken()
-    })
-  }
-
-  function fetchAccountUsingToken () {
-    const account = get('account')
-
-    if (!account) {
-      return Promise.reject(new Error('Not signed in'))
-    }
-
-    return request(`${GITHUB_API_BASEURL}/user`)
-
-    .then((response) => {
-      // https://developer.github.com/v3/users/#get-the-authenticated-user
-
-      update('account', {
-        login: response.login,
-        avatarUrl: response.avatar_url
-      })
-
-      return get('account')
-    })
+    return fetchAccountUsingToken()
   }
 
   function submitLink ({url, title}) {
@@ -205,6 +159,52 @@ url: ${url}
 submittedAt: ${now}
 submittedBy: ${login}
 `
+  }
+
+  function fetchAccountUsingCodeAndState ({code, state}) {
+    if (state !== get('oauthState')) {
+      return Promise.reject(new Error('?state does not match value stored previously, aborting for XSS protection.'))
+    }
+
+    unset('oauthState')
+
+    return request(`${LOGIN_SERVER_BASEURL}${ENV_PREFIX}/${code}?state=${state}`)
+
+    .then((response) => {
+      // {
+      //   access_token: 'ce9f8afc1718d57d24caf84a511e375e21e41eb6',
+      //   token_type: 'bearer',
+      //   scope: 'public_repo'
+      // }
+
+      update('account', {
+        token: response.access_token,
+        scope: response.scope
+      })
+
+      return fetchAccountUsingToken()
+    })
+  }
+
+  function fetchAccountUsingToken () {
+    const account = get('account')
+
+    if (!account) {
+      return Promise.reject(new Error('Not signed in'))
+    }
+
+    return request(`${GITHUB_API_BASEURL}/user`)
+
+    .then((response) => {
+      // https://developer.github.com/v3/users/#get-the-authenticated-user
+
+      update('account', {
+        login: response.login,
+        avatarUrl: response.avatar_url
+      })
+
+      return get('account')
+    })
   }
 
   // return API
