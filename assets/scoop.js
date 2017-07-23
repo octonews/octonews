@@ -167,7 +167,8 @@ Submitted with [🥄 Scoop](https://github.com/gr2m/scoop)!`,
     const ajaxOptions = {
       type: options.type,
       dataType: 'json',
-      url: options.url
+      url: options.url,
+      cache: false
     }
 
     if (account) {

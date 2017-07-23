@@ -30,6 +30,9 @@ function handleUrlSubmit (event) {
   .then((response) => {
     window.alert('link submitted')
     $submitForm[0].reset()
+
+    // let’s bump the number of pending links
+    $pendingTabNum.text(+$pendingTabNum.text() + 1)
   })
 
   .catch((error) => {
