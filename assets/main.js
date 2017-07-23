@@ -1,20 +1,28 @@
 /* global $, Scoop */
 
 const $submitForm = $('#submit-url')
-const $accountContainer = $('#account')
+const $accountTab = $('#account')
+const $pendingTabNum = $('#pending span')
 const $body = $('body')
+const $pendingLinks = $('#pending-links')
 
 $submitForm.on('submit', handleUrlSubmit)
 $body.on('click', '[data-action="login"]', handleLoginClick)
 $body.on('click', '[data-action="logout"]', handleLogoutClick)
+$pendingLinks.on('click', '[data-action="accept"]', handleLinkAcceptClick)
 
 if (Scoop.isSignedIn()) {
   renderSignedIn(Scoop.get('account'))
+  renderPendingLinks()
 } else {
   renderSignedOut()
 }
 
 handleOAuthRedirect()
+
+if ($pendingLinks.length) {
+  updatePendingLinks()
+}
 
 function handleUrlSubmit (event) {
   event.preventDefault()
@@ -27,6 +35,9 @@ function handleUrlSubmit (event) {
   .then((response) => {
     window.alert('link submitted')
     $submitForm[0].reset()
+
+    // let’s bump the number of pending links
+    $pendingTabNum.text(+$pendingTabNum.text() + 1)
   })
 
   .catch((error) => {
@@ -47,6 +58,27 @@ function handleLogoutClick (event) {
   .then(({login}) => {
     console.log(`${login} signed out`)
     renderSignedOut()
+  })
+}
+
+function handleLinkAcceptClick (event) {
+  event.preventDefault()
+
+  const pullRequestNumber = $(event.target).closest('[data-nr]').data('nr')
+
+  Scoop.acceptPendingLink(pullRequestNumber)
+
+  .then(() => {
+    return updatePendingLinks()
+  })
+
+  .then(() => {
+    window.alert('Link accepted 🤗')
+  })
+
+  .catch((error) => {
+    window.alert('Something went wrong 😭')
+    console.log(error)
   })
 }
 
@@ -75,9 +107,10 @@ function handleOAuthRedirect () {
     state: responseState
   })
 
-  .then(({login, avatarUrl}) => {
-    console.log(`${login} signed in`)
-    renderSignedIn({login, avatarUrl})
+  .then((account) => {
+    console.log(`${account.login} signed in`)
+    renderSignedIn(account)
+    return updatePendingLinks()
   })
 
   .catch((error) => {
@@ -86,20 +119,61 @@ function handleOAuthRedirect () {
 }
 
 function renderAccountLoading () {
-  $accountContainer.html(`Loading…`)
+  $accountTab.html(`Loading…`)
   return
 }
 
-function renderSignedIn ({login, avatarUrl}) {
+function renderSignedIn ({login, avatarUrl, hasWriteAccess}) {
   document.body.dataset.accountStatus = 'signed-in'
-  $accountContainer.html(`
+  if (hasWriteAccess) {
+    document.body.dataset.hasWriteAccess = 'yes'
+  }
+  $accountTab.html(`
     <img src="${avatarUrl}&size=50" alt="">
     <strong>${login}</strong>
     <a href="#logout" data-action="logout">(sign out)</a>`)
-  return
 }
 
 function renderSignedOut () {
   document.body.dataset.accountStatus = 'signed-out'
-  $accountContainer.html('<a href="#login" data-action="login">sign in</a>')
+  delete document.body.dataset.hasWriteAccess
+  $accountTab.html('<a href="#login" data-action="login">sign in</a>')
+}
+
+function renderPendingLinks () {
+  const pending = Scoop.get('pendingLinks')
+
+  if (!pending) return
+
+  $pendingTabNum.text(pending.length)
+
+  const listItemsHtml = pending.map((link) => {
+    return `
+      <li data-nr="${link.pullRequest.number}">
+        <a href=${link.url}>${link.title}</a><br>
+        by ${link.submittedBy} on ${link.submittedAt}<br>
+        <br>
+        <button data-action="accept">accept</button> <a href="${link.pullRequest.url}">comment on GitHub</a>
+      </li>`
+  }).join('')
+
+  if (listItemsHtml) {
+    $pendingLinks.html(`<ul>${listItemsHtml}</ul>`)
+    return
+  }
+
+  $pendingLinks.html('<p>No pending links 👌</p>')
+}
+
+function updatePendingLinks () {
+  return Scoop.getPendingLinks()
+
+  .then((pending) => {
+    Scoop.set('pendingLinks', pending)
+    renderPendingLinks()
+  })
+
+  .catch((error) => {
+    console.log(error)
+  })
 }

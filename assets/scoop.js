@@ -15,6 +15,10 @@ window.Scoop = (function () {
     return JSON.parse(localStorage.getItem(key))
   }
 
+  function set (key, value) {
+    localStorage.setItem(key, JSON.stringify(value))
+  }
+
   function update (key, changedProperties) {
     const item = get(key) || {}
     Object.assign(item, changedProperties)
@@ -138,6 +142,21 @@ Submitted with [🥄 Scoop](https://github.com/gr2m/scoop)!`,
     })
   }
 
+  function getPendingLinks () {
+    return request(`${GITHUB_API_BASEURL}/repos/${GITHUB_REPO}/pulls?state=open`)
+
+    .then((pullRequests) => {
+      return pullRequests.filter(isLinkSubmission).map(toLink)
+    })
+  }
+
+  function acceptPendingLink (nr) {
+    return request({
+      type: 'PUT',
+      url: `${GITHUB_API_BASEURL}/repos/${GITHUB_REPO}/pulls/${nr}/merge`
+    })
+  }
+
   // private methods - only used internally
   function request (options) {
     const account = get('account')
@@ -152,7 +171,8 @@ Submitted with [🥄 Scoop](https://github.com/gr2m/scoop)!`,
     const ajaxOptions = {
       type: options.type,
       dataType: 'json',
-      url: options.url
+      url: options.url,
+      cache: false
     }
 
     if (account) {
@@ -245,15 +265,41 @@ submittedBy: ${login}
     })
   }
 
+  function isLinkSubmission (pullRequest) {
+    const branchName = pullRequest.head.ref.split(/:/).pop()
+    return /^submit\//.test(branchName)
+  }
+
+  function toLink (pullRequest) {
+    // This is a very simple implementation, easy to break and easy to trick
+    // us into merging something we don’t want, as we only look at the pull
+    // request description, but not the actual file. That’s TBD :)
+    const link = {
+      submittedAt: pullRequest.created_at,
+      submittedBy: pullRequest.user.login,
+      url: pullRequest.body.match(/Title: ([^\n]+)/)[1],
+      title: pullRequest.body.match(/Title: ([^\n]+)/)[1],
+      pullRequest: {
+        number: pullRequest.number,
+        url: pullRequest.html_url
+      }
+    }
+
+    return link
+  }
+
   // return API
   return {
     get,
+    set,
     update,
     unset,
     isSignedIn,
     signIn,
     signOut,
     fetchAccount,
-    submitLink
+    submitLink,
+    getPendingLinks,
+    acceptPendingLink
   }
 })()
