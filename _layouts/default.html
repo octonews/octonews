@@ -5,22 +5,23 @@
 
   <body data-account-status>
 
+    <h1>{{ site.title }}</h1>
+
     <header>
-      <h2>{{ site.title }}</h2>
       <ul>
         <li {% if page.url == '/' %}class="active"{% endif %}><a href="/">News</a></li>
-        <li {% if page.url == '/submit/' %}class="active"{% endif %}><a href="/submit">Submit</a></li>
         <li id="pending" {% if page.url == '/pending/' %}class="active"{% endif %}><a href="/pending">Pending <span>…</span></a></li>
-        <li id="account">
-          <!-- populated in main.js -->
-        </li>
+        <li id="account"><!-- populated in main.js --></li>
+        <li class="submit" {% if page.url == '/submit/' %}class="active"{% endif %}><a href="/submit">Submit</a></li>
+
       </ul>
     </header>
 
     <main class="page-content" aria-label="Content">
-      <h1>{{ page.title }}</h1>
 
       <div class="wrapper">
+        <h1>{{ page.title }}</h1>
+
         {{ content }}
       </div>
     </main>
