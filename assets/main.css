@@ -1,29 +1,11 @@
 * {
   font-family: "Helvetica Neue", Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
 }
 
 body {
   font-size: 1.4em;
-  font-weight: normal;
   line-height: 1.5;
   padding: 1em;
-}
-
-ul {
-    padding: 0;
-    list-style-type: none;
-}
-
-li {
-  list-style: none;
-  color: #ABABAB;
-}
-
-a {
-  font-weight: 500;
-  text-decoration: none;
-  color: #414141;
 }
 
 input {
@@ -60,36 +42,6 @@ button:focus {
   background: rgb(124, 174, 50); /* @dark-lime */
   text-decoration: none;
   color: white;
-}
-
-.submit {
-  background: rgb(144, 194, 70); /* @lime */
-  padding: 0.375em 1.5em;
-  border-radius: 0.1em;
-}
-.submit a {
-  color: white;
-  text-decoration: none;
-}
-
-#account {
-  padding-right: 1em;
-}
-
-.wrapper {
-  padding: 2em 0 2em 0;
-  margin-right: auto;
-  margin-left: auto;
-  max-width: 900px;
-}
-
-.wrapper p:last-child {
-  padding-bottom: 0.3em;
-}
-
-header {
-  padding-bottom: 2em;
-  border-bottom: 1px solid #E6E6E6;
 }
 
 header ul {
