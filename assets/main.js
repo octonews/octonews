@@ -129,7 +129,6 @@ function renderSignedIn ({login, avatarUrl, hasWriteAccess}) {
     document.body.dataset.hasWriteAccess = 'yes'
   }
   $accountTab.html(`
-    <img src="${avatarUrl}&size=50" alt="">
     <strong>${login}</strong>
     <a href="#logout" data-action="logout">(sign out)</a>`)
 }
