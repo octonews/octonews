@@ -1,4 +1,4 @@
-/* global $, Scoop */
+/* global $, Octonews */
 
 const $submitForm = $('#submit-url')
 const $accountTab = $('#account')
@@ -11,8 +11,8 @@ $body.on('click', '[data-action="login"]', handleLoginClick)
 $body.on('click', '[data-action="logout"]', handleLogoutClick)
 $pendingLinks.on('click', '[data-action="accept"]', handleLinkAcceptClick)
 
-if (Scoop.isSignedIn()) {
-  renderSignedIn(Scoop.get('account'))
+if (Octonews.isSignedIn()) {
+  renderSignedIn(Octonews.get('account'))
   renderPendingLinks()
 } else {
   renderSignedOut()
@@ -30,7 +30,7 @@ function handleUrlSubmit (event) {
   const url = $submitForm.find('[name=url]').val()
   const title = $submitForm.find('[name=title]').val()
 
-  Scoop.submitLink({url, title})
+  Octonews.submitLink({url, title})
 
   .then((response) => {
     window.alert('link submitted')
@@ -47,13 +47,13 @@ function handleUrlSubmit (event) {
 
 function handleLoginClick (event) {
   event.preventDefault()
-  return Scoop.signIn()
+  return Octonews.signIn()
 }
 
 function handleLogoutClick (event) {
   event.preventDefault()
 
-  Scoop.signOut()
+  Octonews.signOut()
 
   .then(({login}) => {
     console.log(`${login} signed out`)
@@ -66,7 +66,7 @@ function handleLinkAcceptClick (event) {
 
   const pullRequestNumber = $(event.target).closest('[data-nr]').data('nr')
 
-  Scoop.acceptPendingLink(pullRequestNumber)
+  Octonews.acceptPendingLink(pullRequestNumber)
 
   .then(() => {
     return updatePendingLinks()
@@ -102,7 +102,7 @@ function handleOAuthRedirect () {
 
   renderAccountLoading()
 
-  Scoop.fetchAccount({
+  Octonews.fetchAccount({
     code: code,
     state: responseState
   })
@@ -141,7 +141,7 @@ function renderSignedOut () {
 }
 
 function renderPendingLinks () {
-  const pending = Scoop.get('pendingLinks')
+  const pending = Octonews.get('pendingLinks')
 
   if (!pending) return
 
@@ -166,10 +166,10 @@ function renderPendingLinks () {
 }
 
 function updatePendingLinks () {
-  return Scoop.getPendingLinks()
+  return Octonews.getPendingLinks()
 
   .then((pending) => {
-    Scoop.set('pendingLinks', pending)
+    Octonews.set('pendingLinks', pending)
     renderPendingLinks()
   })
 
