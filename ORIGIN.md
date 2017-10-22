@@ -1,4 +1,4 @@
-# The origin of Scoop
+# The origin of Octonews
 
 ## What
 
@@ -15,9 +15,9 @@ Instead of searching for a new curator, we are looking for ways to make it simpl
 
 ## How
 
-The priority of the implementation of `scoop` is to be as accessible to contributors as possible. It is also an experiment of using GitHub as a database of sort, in order to keep track of peoples contributions as well as integration of existing tools we use today.
+The priority of the implementation of `octonews` is to be as accessible to contributors as possible. It is also an experiment of using GitHub as a database of sort, in order to keep track of peoples contributions as well as integration of existing tools we use today.
 
-`scoop` will be a GitHub repository containing a [jekyll](https://jekyllrb.com) page. For the link submissions, we will use separate `.yml` files stored in the [`/_data/news`](https://jekyllrb.com/docs/datafiles/#the-data-folder) folder, and the files will be prefixed with the current date.
+`octonews` will be a GitHub repository containing a [jekyll](https://jekyllrb.com) page. For the link submissions, we will use separate `.yml` files stored in the [`/_data/news`](https://jekyllrb.com/docs/datafiles/#the-data-folder) folder, and the files will be prefixed with the current date.
 
 An example file could be `/_data/news/2016-10-14-obamas-facebook-messenger-bot-is-open-source.yml` with the following content
 
@@ -43,7 +43,7 @@ The links can be rendered with a loop like
 {% endfor %}
 ```
 
-Instead of using a text editor or the github.com UI to submit a new link, `scoop` will include a form which will utilise GitHub’s API to create a fork, the .yml file and the pull request. People submitting news will need to login with their GitHub account but don’t need any experience in `.git`, `.github` or `.yml` files at all.
+Instead of using a text editor or the github.com UI to submit a new link, `octonews` will include a form which will utilise GitHub’s API to create a fork, the .yml file and the pull request. People submitting news will need to login with their GitHub account but don’t need any experience in `.git`, `.github` or `.yml` files at all.
 
 Once a PR got submitted, the maintainers team can review and merge the PR, after which the page will be rebuild automatically and the link will appear on the GitHub page.
 

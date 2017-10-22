@@ -1,12 +1,12 @@
 /* global $, localStorage, btoa */
-window.Scoop = (function () {
+window.Octonews = (function () {
   const LOGIN_SERVER_BASEURL = 'https://github-login.glitch.me'
   const GITHUB_API_BASEURL = 'https://api.github.com'
   const GITHUB_OAUTH_URL = 'http://github.com/login/oauth/authorize'
   const GITHUB_SCOPES = [
-    'repo' // once we make scoop public, change it to 'public_repo'
+    'public_repo'
   ]
-  const GITHUB_REPO = `gr2m/scoop`
+  const GITHUB_REPO = `octonews/octonews`
 
   const CLIENT_ID = window.location.hostname === 'localhost' ? '12556b17f8b4fc3f3974' : 'fea7761d62c6ab170278'
   const ENV_PREFIX = window.location.hostname === 'localhost' ? '/local' : ''
@@ -112,7 +112,7 @@ window.Scoop = (function () {
 Title: ${title}
 Url: ${url}
 
-Submitted with [🥄 Scoop](https://github.com/gr2m/scoop)!
+Submitted with [🐙📰 Octonews](https://github.com/octonews/octonews)!
 `,
           // btoa creates a base-64 encoded string
           // https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/btoa
@@ -135,7 +135,7 @@ Submitted with [🥄 Scoop](https://github.com/gr2m/scoop)!
           body: `Title: ${title}
 Url: ${url}
 
-Submitted with [🥄 Scoop](https://github.com/gr2m/scoop)!`,
+Submitted with [🐙📰 Octonews](https://github.com/octonews/octonews)!`,
           maintainer_can_modify: true
         }
       })
