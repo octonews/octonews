@@ -4,11 +4,6 @@
   {% include head.html %}
 
   <body data-account-status>
-<<<<<<< Updated upstream
-    <main class="page-content" aria-label="Content">
-
-=======
->>>>>>> Stashed changes
     <header>
       <ul>
         <li id="title" {% if page.url == '/' %}class="active"{% endif %}><a href="/">{{ site.title }}</a></li>
@@ -16,16 +11,16 @@
         <li id="account">
           <!-- populated in main.js -->
         </li>
-<<<<<<< Updated upstream
+
         <li {% if page.url == '/submit/' %}class="active"{% endif %}><a href="/submit"><button>Submit</button></a></li>
 
       </ul>
     </header>
+    <main class="page-content" aria-label="Content">
 
       <div class="content">
         <h3>{{ page.title }}</h3>
 
-=======
         <li {% if page.url == '/submit/' %}class="active"{% endif %}><a href="/submit">Submit</a></li>
 
       </ul>
@@ -35,7 +30,6 @@
       <div class="content">
         <h3>{{ page.title }}</h3>
 
->>>>>>> Stashed changes
         {{ content }}
       </div>
     </main>
