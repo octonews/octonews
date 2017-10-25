@@ -33,7 +33,9 @@ a {
   border-bottom: 1px dotted black;
 }
 
-input, button {
+input,
+button,
+.call-to-action {
   display: inline-block;
   border-radius: 0.25em;
   box-sizing: border-box;
@@ -49,6 +51,7 @@ input {
   max-width: 100%;
 }
 
+.call-to-action,
 button {
   background: rgb(144, 194, 70); /* @lime */
   color: white;
@@ -58,6 +61,9 @@ button {
   cursor: pointer;
   text-align: center;
 }
+.call-to-action:hover,
+.call-to-action:active,
+.call-to-action:focus,
 button:hover,
 button:active,
 button:focus {
