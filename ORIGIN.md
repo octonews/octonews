@@ -2,9 +2,10 @@
 
 ## What
 
-We want to create a link-sharing platform which allows communities to collaboratively share links on topics that interest us. It will be a website and will have a web UI to submit links as well as review submissions, while at the same time integrate with GitHub to work well with existing workflows.
+We want to create a link-sharing platform which allows communities to collaboratively share links on topics that interest them. Octonews will be a standalone website with a web UI that has the ability to submit links and, as an administrator, review submissions. It will also be able to integrate with GitHub to work well with existing workflows. 
 
-While my main motivation is to to create it for the Hoodie community, making it flexible enough so that it can be used by other communities is a priority form the start.
+While our main motivation is to to create it for the Hoodie community, making it flexible enough so it can be used by others is a priority from the start.
+
 
 ## Why
 
