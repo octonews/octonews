@@ -2,21 +2,21 @@
 
 ## What
 
-We want to create a link-sharing platform which allows communities to collaboratively share links on topics that interest them. Octonews will be a standalone website with a web UI that has the ability to submit links and, as an administrator, review submissions. It will also be able to integrate with GitHub to work well with existing workflows. 
+We want to create a link-sharing platform which allows communities to collaboratively share links on topics that interest them. Octonews will be a stand-alone website with a web UI that has the ability to submit links and, as an administrator, review submissions. It will also be able to integrate with GitHub to work well with existing workflows. 
 
-While our main motivation is to to create it for the Hoodie community, making it flexible enough so it can be used by others is a priority from the start.
+While our main motivation is to to create it for the Hoodie community, making it flexible enough to be used by others is a priority from the start.
 
 
 ## Why
 
-Sharing links around topics like Design, Tech Culture, Open Source, Documentation and Code has a long tradition at Hoodie, it is a vital part of our Hoodie Weekly. But the process of finding good resources to share is a time consuming. And as the Hoodie weekly requires the work to be done on a weekly process, it’s a lot to ask from a single person. Nevertheless, we
-had fantastic curators in the past doing an amazing job (thanks for all your hard work Lena, Jenn and Cecily).
+Sharing links around topics like Design, Tech Culture, Open Source, Documentation and Code is a long tradition at Hoodie. It is a vital part of our Hoodie Weekly. But the process of finding good resources to share is time consuming. And as the Hoodie Weekly requires work to be done on a weekly process, it’s a lot to ask from a single person. Nevertheless, we
+had fantastic curators in the past who did an amazing job (thanks for all your hard work Lena, Jenn and Cecily).
 
-Instead of searching for a new curator, we are looking for ways to make it simpler to collaborate on the editorial work. We take it as given when working on code, and our code collaboration tools and workflows are arguably the reason why Open Source is so successful. So we figured why create better tooling for our editorial team as well.
+Instead of searching for a new curator, we are looking for ways to make it simpler to collaborate on the editorial work. We take it as a given when working on code, and our code collaboration tools and workflows are arguably the reason why Open Source is so successful. So we figured - why not create better tooling for our editorial team, as well.
 
 ## How
 
-The priority of the implementation of `octonews` is to be as accessible to contributors as possible. It is also an experiment of using GitHub as a database of sort, in order to keep track of peoples contributions as well as integration of existing tools we use today.
+The priority of the implementation of `octonews` is to be as accessible to contributors as possible. It is also an experiment using GitHub as a database of sorts, in order to keep track of people's contributions as well as to integrate existing tools we use today.
 
 `octonews` will be a GitHub repository containing a [jekyll](https://jekyllrb.com) page. For the link submissions, we will use separate `.yml` files stored in the [`/_data/news`](https://jekyllrb.com/docs/datafiles/#the-data-folder) folder, and the files will be prefixed with the current date.
 
@@ -44,9 +44,9 @@ The links can be rendered with a loop like
 {% endfor %}
 ```
 
-Instead of using a text editor or the github.com UI to submit a new link, `octonews` will include a form which will utilise GitHub’s API to create a fork, the .yml file and the pull request. People submitting news will need to login with their GitHub account but don’t need any experience in `.git`, `.github` or `.yml` files at all.
+Instead of using a text editor or the github.com UI to submit a new link, `octonews` will include a form which will utilise GitHub’s API to create a fork, the .yml file and the pull request. People submitting news will need to login with their GitHub account, but don’t need any experience in `.git`, `.github` or `.yml` files at all.
 
-Once a PR got submitted, the maintainers team can review and merge the PR, after which the page will be rebuild automatically and the link will appear on the GitHub page.
+Once a PR gets submitted, the maintainers team can review and merge the PR, after which the page will be rebuilt automatically and the link will appear on the GitHub page.
 
 Something we do _not_ plan to add is comments. People can have discussions on GitHub, but we will not show any discussions on news.github.com
 
@@ -58,7 +58,7 @@ Once that all works and proved useful, there are a few more thoughts for additio
 
 ### Pending submissions
 
-when signed in
+when signed in:
 
 - show pending submissions in the web UI
 - accept submissions through web UI
@@ -71,7 +71,7 @@ when signed in
 
 ### CI
 
-validate the submitted .yml file for
+Validate the submitted .yml file for:
 
 - format
 - list of categories
