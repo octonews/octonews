@@ -42,3 +42,7 @@ Octonews.submitLink({url, tile})
 // load pending link submissions
 Octonews.getPendingLinks()
 ```
+
+## License
+
+[Apache 2.0](LICENSE)
