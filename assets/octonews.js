@@ -277,7 +277,7 @@ submittedBy: ${login}
     const link = {
       submittedAt: pullRequest.created_at,
       submittedBy: pullRequest.user.login,
-      url: pullRequest.body.match(/Title: ([^\n]+)/)[1],
+       url: pullRequest.body.match(/Url: ([^\n]+)/)[1]
       title: pullRequest.body.match(/Title: ([^\n]+)/)[1],
       pullRequest: {
         number: pullRequest.number,
