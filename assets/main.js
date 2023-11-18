@@ -5,6 +5,7 @@ const $accountTab = $('#account')
 const $pendingTabNum = $('#pending span')
 const $body = $('body')
 const $pendingLinks = $('#pending-links')
+const $acceptedLinks = $('#accepted-links')
 
 $submitForm.on('submit', handleUrlSubmit)
 $body.on('click', '[data-action="login"]', handleLoginClick)
@@ -22,6 +23,10 @@ handleOAuthRedirect()
 
 if ($pendingLinks.length) {
   updatePendingLinks()
+}
+
+if ($acceptedLinks.length) {
+  updateReactions()
 }
 
 function handleUrlSubmit (event) {
@@ -174,5 +179,15 @@ function updatePendingLinks () {
 
   .catch((error) => {
     console.log(error)
+  })
+}
+
+function updateReactions () {
+  return Octonews.getReactions()
+
+  .then(result => {
+    result.forEach(({number, numReactions}) => {
+      $(`#pr-${number} .reactions`).text(numReactions)
+    })
   })
 }

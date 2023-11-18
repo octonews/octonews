@@ -288,6 +288,40 @@ submittedBy: ${login}
     return link
   }
 
+  function getReactions () {
+    const query = `
+{
+  repository(owner: "octonews", name: "octonews") {
+    pullRequests(first: 100, states: MERGED, labels: ["octonews"], orderBy: {field:CREATED_AT, direction:DESC}) {
+      edges {
+        node {
+          id
+          number
+          reactions(content: HEART) {
+            totalCount
+          }
+        }
+      }
+    }
+  }
+}`
+    return request({
+      type: 'POST',
+      url: `${GITHUB_API_BASEURL}/graphql`,
+      data: {query}
+    })
+
+    .then(result => {
+      return result.data.repository.pullRequests.edges.map(({node}) => {
+        const number = node.number
+        const id = node.id
+        const numReactions = node.reactions.totalCount
+
+        return {number, id, numReactions}
+      }, {})
+    })
+  }
+
   // return API
   return {
     get,
@@ -300,6 +334,7 @@ submittedBy: ${login}
     fetchAccount,
     submitLink,
     getPendingLinks,
-    acceptPendingLink
+    acceptPendingLink,
+    getReactions
   }
 })()
